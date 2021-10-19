@@ -26,7 +26,7 @@ func dataInput() bool{
 	flag.IntVar(&height, "h", 0, "Board height")
 	flag.IntVar(&width, "w", 0, "Board width")
 	flag.Parse() 
-	successfulInput := (height * width != 0)
+	successfulInput := (height > 0 && width > 0)
 	return successfulInput
 }
 
@@ -44,6 +44,6 @@ func drawChessBoard() {
 }
 
 func printInstructions(){
-	fmt.Println("You should specify both height & width params by passing them to function call")
+	fmt.Println("You should specify both height & width params (>0) by passing them to function call")
 	fmt.Println("\ttask1 -h=8 -w=8\t//will print 8x8 chessboard")
 }
