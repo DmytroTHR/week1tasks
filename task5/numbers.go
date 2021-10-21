@@ -63,6 +63,7 @@ var (
 
 const (
 	delim = " "
+	minusRepresent = "МИНУС"
 )
 
 type ThousandToPows struct {
@@ -122,15 +123,19 @@ func correctGender(lastDigit *string, thousandToPow ThousandToPows) {
 }
 
 func GetStringRepresentation(number int64) string {
-	if number < 0 {
-		return "меньше ноля"
-	}
 
 	if number == 0 {
 		return "ноль"
 	}
 
 	var fullRepresent []string
+
+	var isNegative bool
+	if number < 0 {
+		isNegative = true
+		number = -1 * number
+	}
+
 	var powOfThous int
 	for number > 0 {
 		if powOfThous >= len(PowersOfThousand) {
@@ -149,5 +154,10 @@ func GetStringRepresentation(number int64) string {
 		powOfThous++
 	}
 
-	return strings.Join(fullRepresent, delim)
+	result:=strings.Join(fullRepresent, delim)
+	if isNegative {
+		result = minusRepresent + result
+	}
+
+	return result
 }
