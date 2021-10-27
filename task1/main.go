@@ -8,42 +8,47 @@ import (
 const (
 	squareBlack = "x"
 	squareWhite = "_"
+	instructions = `You should specify both height & width params (>0) by passing them to function call")
+	task1 -h=8 -w=8 //will print 8x8 chessboard`
 )
 
-var(
+var (
 	height, width int
 )
 
-func main(){
+func main() {
 	if dataInput() {
-		drawChessBoard()
+		board := drawChessBoard(height, width)
+		for _, val := range board {
+			fmt.Println(val)
+		}
 	} else {
 		printInstructions()
-	}	
+	}
 }
 
-func dataInput() bool{
-	flag.IntVar(&height, "h", 0, "Board height")
-	flag.IntVar(&width, "w", 0, "Board width")
-	flag.Parse() 
+func dataInput() bool {
+	flag.IntVar(&height, "h", 3, "Board height")
+	flag.IntVar(&width, "w", 3, "Board width")
+	flag.Parse()
 	successfulInput := (height > 0 && width > 0)
 	return successfulInput
 }
 
-func drawChessBoard() {
-	for i:=0; i<height; i++{
-		for j:=0; j<width; j++{			
-			if j%2==0 && i%2==0 || j%2!=0 && i%2!=0{
-				fmt.Printf("%s", squareBlack)
+func drawChessBoard(height, width int) []string {
+	result := make([]string, height)
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			if j%2 == 0 && i%2 == 0 || j%2 != 0 && i%2 != 0 {
+				result[i] = result[i] + squareBlack
 			} else {
-				fmt.Printf("%s", squareWhite)
+				result[i] = result[i] + squareWhite
 			}
 		}
-		fmt.Println()
 	}
+	return result
 }
 
-func printInstructions(){
-	fmt.Println("You should specify both height & width params (>0) by passing them to function call")
-	fmt.Println("\ttask1 -h=8 -w=8\t//will print 8x8 chessboard")
+func printInstructions() {
+	fmt.Println(instructions)
 }
