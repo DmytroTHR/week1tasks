@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	squareBlack = "x"
-	squareWhite = "_"
+	squareBlack  = "x"
+	squareWhite  = "_"
 	instructions = `You should specify both height & width params (>0) by passing them to function call")
 	task1 -h=8 -w=8 //will print 8x8 chessboard`
 )
@@ -17,19 +17,20 @@ var (
 )
 
 func main() {
-	if dataInput() {
-		board := drawChessBoard(height, width)
-		for _, val := range board {
-			fmt.Println(val)
-		}
-	} else {
+	if !dataInput() {
 		fmt.Println(instructions)
+		return
+	}
+
+	board := drawChessBoard(height, width)
+	for _, val := range board {
+		fmt.Println(val)
 	}
 }
 
 func dataInput() bool {
-	flag.IntVar(&height, "h", 3, "Board height")
-	flag.IntVar(&width, "w", 3, "Board width")
+	flag.IntVar(&height, "h", 1, "Board height")
+	flag.IntVar(&width, "w", 1, "Board width")
 	flag.Parse()
 	successfulInput := (height > 0 && width > 0)
 	return successfulInput
