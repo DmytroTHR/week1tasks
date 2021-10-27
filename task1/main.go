@@ -23,7 +23,7 @@ func main() {
 			fmt.Println(val)
 		}
 	} else {
-		printInstructions()
+		fmt.Println(instructions)
 	}
 }
 
@@ -47,8 +47,4 @@ func drawChessBoard(height, width int) []string {
 		}
 	}
 	return result
-}
-
-func printInstructions() {
-	fmt.Println(instructions)
 }

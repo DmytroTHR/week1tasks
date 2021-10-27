@@ -23,11 +23,6 @@ func Test_drawChessBoard(t *testing.T) {
 
 }
 
-func Test_printInstructions(t *testing.T){
-	//simple - not testing
-	printInstructions()
-}
-
 func Test_dataInput(t *testing.T){
 	if ! (dataInput()){
 		t.Error("wrong data input")
