@@ -11,23 +11,25 @@ var (
 )
 
 const (
-	delimiter = ", "
+	delimiter    = ", "
+	instructions = `You should specify natural number(>=0) to analyze by passing it to function call
+		task7 -n 225	//will print 'Result is: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14'`
 )
 
 func main() {
-	if dataInput() {
-		fmt.Print("Result is: ")
-		for ind, res := range findNeededNumbers() {
-			if ind > 0 {
-				fmt.Print(delimiter)
-			}
-			fmt.Printf("%d", res)
-		}
-		fmt.Println()
-
-	} else {
-		printInstructions()
+	if !dataInput() {
+		fmt.Println(instructions)
+		return
 	}
+
+	fmt.Print("Result is: ")
+	for ind, res := range findNeededNumbers() {
+		if ind > 0 {
+			fmt.Print(delimiter)
+		}
+		fmt.Printf("%d", res)
+	}
+	fmt.Println()
 }
 
 func findNeededNumbers() []int {
@@ -49,7 +51,3 @@ func dataInput() bool {
 	return successfulInput
 }
 
-func printInstructions() {
-	fmt.Println("You should specify natural number(>=0) to analyze by passing it to function call")
-	fmt.Println("\ttask7 -n 225\t//will print 'Result is: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14'")
-}
