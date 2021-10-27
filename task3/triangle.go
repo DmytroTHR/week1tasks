@@ -19,6 +19,11 @@ type GeronArea interface {
 	Area() float64
 }
 
+const (
+	NotEnoughParams = "number of received parameters doesn't equal to 4"
+	CannotParse = "cannot parse one ore more side sizes"
+)
+
 func (triangle *Triangle) Area() float64 {
 	halfPerimeter := (triangle.sideA + triangle.sideB + triangle.sideC) / 2.0
 	return math.Sqrt(halfPerimeter * (halfPerimeter - triangle.sideA) * (halfPerimeter - triangle.sideB) * (halfPerimeter - triangle.sideC))
@@ -57,7 +62,7 @@ func readUserInput() string {
 func parseTriangleInput(userInput string) (string, float64, float64, float64, error) {
 	foundParams := strings.Split(userInput, ",")
 	if len(foundParams) != 4 {
-		return "", 0, 0, 0, errors.New("number of received parameters doesn't equal to 4")
+		return "", 0, 0, 0, errors.New(NotEnoughParams)
 	}
 	name := trimTabsAndSpaces(foundParams[0])
 	sideA, okA := parseToFloat(foundParams[1])
@@ -65,7 +70,7 @@ func parseTriangleInput(userInput string) (string, float64, float64, float64, er
 	sideC, okC := parseToFloat(foundParams[3])
 
 	if !okA || !okB || !okC {
-		return "", 0, 0, 0, errors.New("cannot parse one ore more side sizes")
+		return "", 0, 0, 0, errors.New(CannotParse)
 	}
 
 	return name, sideA, sideB, sideC, nil
@@ -74,6 +79,7 @@ func parseTriangleInput(userInput string) (string, float64, float64, float64, er
 func trimTabsAndSpaces(str string) string {
 	res := strings.Trim(str, " ")
 	res = strings.Trim(res, "\t")
+	res = strings.Trim(res, " ")
 	return res
 }
 

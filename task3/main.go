@@ -6,8 +6,9 @@ import (
 	"strings"
 )
 
+var trianglesArray []Triangle
+
 func main() {
-	var trianglesArray []Triangle
 	for {
 		triangle, err := TriangleInitManually()
 		if err == nil {
@@ -15,7 +16,7 @@ func main() {
 		} else {
 			fmt.Println(err.Error())
 		}
-		if !weContinue() {
+		if !weContinue(askIfContinue()) {
 			break
 		}
 	}
@@ -23,12 +24,16 @@ func main() {
 	outputResult(trianglesArray)
 }
 
-func weContinue() bool {
-	fmt.Println(">> Wish to add another triangle Yes/No?")
+func askIfContinue() string {
 	var ans string
+	fmt.Println(">> Wish to add another triangle Yes/No?")
 	fmt.Scanln(&ans)
-	ans = strings.TrimSpace(strings.ToLower(ans))
-	if ans == "yes" || ans == "y" {
+	return ans
+}
+
+func weContinue(answer string) bool {
+	answer = strings.TrimSpace(strings.ToLower(answer))
+	if answer == "yes" || answer == "y" {
 		return true
 	}
 	return false
