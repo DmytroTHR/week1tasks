@@ -5,11 +5,17 @@ import (
 	"strings"
 )
 
+const (
+	FirstIntoSecond = "First fits into Second"
+	SecondIntoFirst = "Second fits into First"
+	Neither         = "Neither fits"
+)
+
 func main() {
-	for{
+	for {
 		fmt.Println("FIRST envelope")
 		envelope1, err := EnvelopeInitManually()
-		if err != nil {				
+		if err != nil {
 			fmt.Println(err.Error())
 			continue
 		}
@@ -18,42 +24,45 @@ func main() {
 
 		fmt.Println("SECOND envelope")
 		envelope2, err := EnvelopeInitManually()
-		if err != nil {				
+		if err != nil {
 			fmt.Println(err.Error())
 			continue
-		}		
+		}
 
-		checkIfFits(envelope1, envelope2)
+		fmt.Printf("\n%v\n", resultFits(envelope1, envelope2))
 
-		if !weContinue(){
+		if !weContinue(askIfContinue()) {
 			break
 		}
 		fmt.Println("=============================")
 	}
 }
 
-func weContinue() bool{
-	fmt.Println(">> Continue Yes/No")
+func askIfContinue() string {
 	var ans string
+	fmt.Println(">> Continue Yes/No")
 	fmt.Scanln(&ans)
-	ans = strings.TrimSpace(strings.ToLower(ans))
-	if ans == "yes" || ans == "y"{
+	return ans
+}
+
+func weContinue(answer string) bool {
+	answer = strings.TrimSpace(strings.ToLower(answer))
+	if answer == "yes" || answer == "y" {
 		return true
 	}
 	return false
 }
 
-func checkIfFits(envelope1, envelope2 Envelope) {
-	fmt.Println()
-
-	switch{
+func resultFits(envelope1, envelope2 Envelope) string {
+	var result string
+	switch {
 	case envelope1.FitsInto(envelope2):
-		fmt.Println("First fits into Second")
+		result = FirstIntoSecond
 	case envelope2.FitsInto(envelope1):
-		fmt.Println("Second fits into First")
+		result = SecondIntoFirst
 	default:
-		fmt.Println("Neither fits")	
-	}	
+		result = Neither
+	}
 
-	fmt.Println()
+	return result
 }
