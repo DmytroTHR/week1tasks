@@ -31,18 +31,14 @@ func main() {
 			fmt.Println("There were problems replacing substring in file")
 		}
 	default:
-		printInstructions()
+		fmt.Println(instruction)
 	}
 }
 
 func countSubstringsInFile(fileName, substring string) (int, bool) {
-	file, ok := getFile(fileName)
-	if !ok {
-		return 0, false
-	}
-
-	fileData, ok := getStringFromFile(file)
-	if !ok {
+	file, okFile := getFile(fileName)
+	fileData, okString := getStringFromFile(file)
+	if !okFile || !okString {
 		return 0, false
 	}
 
@@ -73,13 +69,9 @@ func getFile(fileName string) (FileTask, bool) {
 }
 
 func replaceSubstringInFile(fileName, substrFrom, substrTo string) bool {
-	file, ok := getFile(fileName)
-	if !ok {
-		return false
-	}
-
-	fileData, ok := getStringFromFile(file)
-	if !ok {
+	file, okFile := getFile(fileName)
+	fileData, okString := getStringFromFile(file)
+	if !okFile || !okString {
 		return false
 	}
 
@@ -87,8 +79,4 @@ func replaceSubstringInFile(fileName, substrFrom, substrTo string) bool {
 	err := file.RewriteWithString(newFileData)
 
 	return err == nil
-}
-
-func printInstructions() {
-	fmt.Println(instruction)
 }
