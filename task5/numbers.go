@@ -62,8 +62,9 @@ var (
 )
 
 const (
-	delim = " "
+	delim          = " "
 	minusRepresent = "МИНУС"
+	zeroRepresent  = "ноль"
 )
 
 type ThousandToPows struct {
@@ -74,20 +75,21 @@ type ThousandToPows struct {
 }
 
 func hundredsToNumber(hundreds int) []string {
-	result := make([]string, 1, 3)
+	result := make([]string, 0, 3)
 
 	ones := hundreds % 10
 	tens := (hundreds - ones) % 100
 	hunds := (hundreds - tens - ones)
 
-	switch {
-	case hunds > 0:
+	if hunds > 0 {
 		result = append(result, Hundreds[hunds])
-		fallthrough
-	case tens > 10:
+	}
+
+	if tens > 10 {
 		result = append(result, TwentyToNinety[tens])
-		fallthrough
-	case ones > 0 || tens == 10:
+	}
+
+	if ones > 0 || tens == 10 {
 		if tens == 10 {
 			result = append(result, OneToTwenty[tens+ones])
 		} else {
@@ -125,7 +127,7 @@ func correctGender(lastDigit *string, thousandToPow ThousandToPows) {
 func GetStringRepresentation(number int64) string {
 
 	if number == 0 {
-		return "ноль"
+		return zeroRepresent
 	}
 
 	var fullRepresent []string
@@ -138,9 +140,9 @@ func GetStringRepresentation(number int64) string {
 
 	var powOfThous int
 	for number > 0 {
-		if powOfThous >= len(PowersOfThousand) {
-			return "cannot represent - number is too big"
-		}
+		//if powOfThous >= len(PowersOfThousand) {
+		//	return "cannot represent - number is too big"
+		//}
 
 		curNumber := int(number % 1000)
 		if curNumber > 0 {
@@ -154,10 +156,10 @@ func GetStringRepresentation(number int64) string {
 		powOfThous++
 	}
 
-	result:=strings.Join(fullRepresent, delim)
+	result := strings.Join(fullRepresent, delim)
 	if isNegative {
 		result = minusRepresent + result
 	}
 
-	return result
+	return strings.TrimSuffix(result, delim)
 }
