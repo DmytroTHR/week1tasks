@@ -38,10 +38,8 @@ func main() {
 		return
 	}
 
-	algoChoice := chooseAlgorithm(strFromParams)
-
 	result := make([]string, 0, len(numbersArray))
-	switch algoChoice {
+	switch chooseAlgorithm(strFromParams) {
 	case AlgMoscow:
 		result = findHappyMoscowNumbers(numbersArray)
 		fmt.Printf("Happy Moscow tickets count in file %s:\t%d\n", ticketsFile, len(result))
@@ -84,10 +82,10 @@ func getNumbersFromFile(fileName string) ([]int, error) {
 	result := make([]int, 0, len(matchingStrings))
 
 	for _, strTicket := range matchingStrings {
-		ticketNum, err := strconv.Atoi(strTicket)
-		if err != nil {
-			continue
-		}
+		ticketNum, _ := strconv.Atoi(strTicket)
+	//	if err != nil {
+	//		continue
+	//	}
 		result = append(result, int(ticketNum))
 	}
 
@@ -162,14 +160,14 @@ func getDigitsArrayFromNumber(number int) ([]int, error) {
 
 	numWas := number
 
-	for i:=NumDigitsInTicket-1; i>=0; i-- {
+	for i := NumDigitsInTicket - 1; i >= 0; i-- {
 		digit := number % 10
 		result[i] = digit
 		number = number / 10
 	}
 
 	if number != 0 {
-		return nil, fmt.Errorf("number of digits in %d shouldn't be greater than %d", numWas, NumDigitsInTicket)
+		return []int{}, fmt.Errorf("number of digits in %d shouldn't be greater than %d", numWas, NumDigitsInTicket)
 	}
 
 	return result, nil
@@ -183,6 +181,8 @@ func addZerosIfNeeded(num int) string {
 		}
 		strNum = "0" + strNum
 	}
+
+	strNum = strNum[:NumDigitsInTicket]
 
 	return strNum
 }
