@@ -59,9 +59,12 @@ func fibonacci() func() (int64, error) {
 	}
 }
 
-func dataInput() bool {
+func init() {
 	flag.Int64Var(&begin, "b", 0, "Sequence begin")
 	flag.Int64Var(&end, "e", 0, "Sequence end")
+}
+
+func dataInput() bool {
 	flag.Parse()
 	successfulInput := (begin >= 0 && end >= 0 && begin < end)
 	return successfulInput

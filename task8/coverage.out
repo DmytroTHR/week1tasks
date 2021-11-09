@@ -1,11 +1,11 @@
 mode: set
-task8/main.go:20.13,21.18 1 0
-task8/main.go:25.2,26.48 2 0
-task8/main.go:32.2,32.15 1 0
-task8/main.go:21.18,24.3 2 0
-task8/main.go:26.48,27.14 1 0
-task8/main.go:30.3,30.24 1 0
-task8/main.go:27.14,29.4 1 0
+task8/main.go:20.13,21.18 1 1
+task8/main.go:25.2,26.48 2 1
+task8/main.go:32.2,32.15 1 1
+task8/main.go:21.18,24.3 2 1
+task8/main.go:26.48,27.14 1 1
+task8/main.go:30.3,30.24 1 1
+task8/main.go:27.14,29.4 1 1
 task8/main.go:35.38,39.6 4 1
 task8/main.go:47.2,47.20 1 1
 task8/main.go:39.6,40.41 1 1
@@ -16,5 +16,6 @@ task8/main.go:42.41,43.9 1 1
 task8/main.go:50.40,52.31 2 1
 task8/main.go:52.31,53.27 1 1
 task8/main.go:56.3,58.19 2 1
-task8/main.go:53.27,55.4 1 0
-task8/main.go:62.23,68.2 5 0
+task8/main.go:53.27,55.4 1 1
+task8/main.go:62.13,65.2 2 1
+task8/main.go:67.23,71.2 3 1
