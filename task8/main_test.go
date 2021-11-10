@@ -58,7 +58,7 @@ func Test_main(t *testing.T) {
 
 }
 
-func Test_fibonacci(t *testing.T) {
+func Test_fibonacciOverflow(t *testing.T) {
 	fibo := fibonacci()
 	stepsCount := 0
 	for {
@@ -68,7 +68,7 @@ func Test_fibonacci(t *testing.T) {
 			break
 		}
 	}
-	if stepsCount <= 0 || stepsCount == MaxInt64 {
-		t.Errorf("Overlooping")
+	if stepsCount == MaxInt64 {
+		t.Errorf("Overflow didn't happen")
 	}
 }
