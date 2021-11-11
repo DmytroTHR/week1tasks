@@ -26,7 +26,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/", getInstructionPage)
 	router.GET("/number/:num", getTextRepresentation)
-	router.Run("localhost:8080")
+	router.Run("0.0.0.0:8080")
 }
 
 func getTextRepresentation(c *gin.Context) {
