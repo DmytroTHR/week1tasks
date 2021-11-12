@@ -23,16 +23,24 @@ type Instruction struct {
 }
 
 func main() {
+	defer CloseDB()
+
 	router := gin.Default()
 	router.GET("/", getInstructionPage)
 	router.GET("/number/:num", getTextRepresentation)
-	router.Run("0.0.0.0:8080")
+	//router.Run("0.0.0.0:8080")
+	router.Run("localhost:8080")
 }
 
 func getTextRepresentation(c *gin.Context) {
 	success := true
 	number := c.Param("num")
-	resText, err := GetStringRepresentation(number)
+	lang := c.Request.URL.Query().Get("lang")
+	if lang == "" {
+		lang = "RU"
+	}
+
+	resText, err := GetStringRepresentation(number, lang)
 	if err != nil {
 		success = false
 		resText = err.Error()

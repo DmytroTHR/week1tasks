@@ -11,6 +11,7 @@ RUN go mod download
 
 COPY *.go ./
 COPY README.md ./
+COPY *.txt ./
 
 RUN go build -o /task5-docker
 

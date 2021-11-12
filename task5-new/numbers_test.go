@@ -5,6 +5,10 @@ import (
 	"testing"
 )
 
+func init() {
+	initStructuresForLanguage("RU")
+}
+
 func Test_hundredsToNumber(t *testing.T) {
 	testcases := map[int][]string{
 		-1:  {},
@@ -71,15 +75,15 @@ func Test_correctGender(t *testing.T) {
 
 func Test_GetStringRepresentation(t *testing.T) {
 	testcases := map[string]string{
-		"-1000":   minusRepresent + delim + "одна" + delim + "тысяча",
-		"0":       zeroRepresent,
+		"-1000":   "МИНУС" + delim + "одна" + delim + "тысяча",
+		"0":       "ноль",
 		"1000":    "одна" + delim + "тысяча",
 		"1001001": "один" + delim + "миллион" + delim + "одна" + delim + "тысяча" + delim + "один",
-		"abc": "",
+		"abc":     "",
 	}
 
 	for k, v := range testcases {
-		curRes, _ := GetStringRepresentation(k)
+		curRes, _ := GetStringRepresentation(k, "RU")
 		if curRes != v {
 			t.Errorf("Expected %v but got %v for initial value %v", v, curRes, k)
 		}

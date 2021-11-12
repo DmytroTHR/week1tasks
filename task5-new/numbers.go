@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,66 +14,19 @@ const (
 )
 
 var (
-	OneToTwenty = map[int]string{
-		1:  "один",
-		2:  "два",
-		3:  "три",
-		4:  "четыре",
-		5:  "пять",
-		6:  "шесть",
-		7:  "семь",
-		8:  "восемь",
-		9:  "девять",
-		10: "десять",
-		11: "одиннадцать",
-		12: "двенадцать",
-		13: "тринадцать",
-		14: "четырнадцать",
-		15: "пятнадцать",
-		16: "шестнадцать",
-		17: "семнадцать",
-		18: "восемнадцать",
-		19: "девятнадцать",
-	}
-
-	TwentyToNinety = map[int]string{
-		20: "двадцать",
-		30: "тридцать",
-		40: "сорок",
-		50: "пятьдесят",
-		60: "шестьдесят",
-		70: "семьдесят",
-		80: "восемьдесят",
-		90: "девяносто",
-	}
-
-	Hundreds = map[int]string{
-		100: "сто",
-		200: "двести",
-		300: "триста",
-		400: "четыреста",
-		500: "пятьсот",
-		600: "шестьсот",
-		700: "семьсот",
-		800: "восемьсот",
-		900: "девятьсот",
-	}
-
-	PowersOfThousand = map[int]ThousandToPows{
-		0: {false, "", "", ""},
-		1: {true, "тысяча", "тысячи", "тысяч"},
-		2: {false, "миллион", "миллиона", "миллионов"},
-		3: {false, "миллиард", "миллиарда", "миллиардов"},
-		4: {false, "триллион", "триллиона", "триллионов"},
-		5: {false, "квадриллион", "квадриллиона", "квадриллионов"},
-		6: {false, "квинтиллион", "квинтиллиона", "квинтиллионов"},
-	}
+	OneToTwenty      map[int]string
+	TwentyToNinety   map[int]string
+	Hundreds         map[int]string
+	PowersOfThousand map[int]ThousandToPows
+	ZeroRepresent    string
+	MinusRepresent   string
+	OneInFemale      string
+	TwoInFemale      string
+	CurrentLang      = ""
 )
 
 const (
-	delim          = " "
-	minusRepresent = "МИНУС"
-	zeroRepresent  = "ноль"
+	delim = " "
 )
 
 type ThousandToPows struct {
@@ -80,6 +34,83 @@ type ThousandToPows struct {
 	One          string
 	TwoThreeFour string
 	Others       string
+}
+
+func initStructuresForLanguage(lang string) {
+	OneToTwenty = make(map[int]string)
+	for i := 1; i < 20; i++ {
+		val, err := GetValueByKey(lang, strconv.Itoa(i))
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		OneToTwenty[i] = val
+	}
+
+	TwentyToNinety = make(map[int]string)
+	for i := 20; i < 100; i += 10 {
+		val, err := GetValueByKey(lang, strconv.Itoa(i))
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		TwentyToNinety[i] = val
+	}
+
+	Hundreds = make(map[int]string)
+	for i := 100; i < 1000; i += 100 {
+		val, err := GetValueByKey(lang, strconv.Itoa(i))
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		Hundreds[i] = val
+	}
+
+	PowersOfThousand = make(map[int]ThousandToPows)
+	for i := 0; i < 7; i++ {
+		keyStart := "1000_" + strconv.Itoa(i)
+		isFemale, err := GetValueByKey(lang, keyStart+"female")
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		forOne, err := GetValueByKey(lang, keyStart+"one")
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		forTwo, err := GetValueByKey(lang, keyStart+"two")
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		forFive, err := GetValueByKey(lang, keyStart+"five")
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		PowersOfThousand[i] = ThousandToPows{
+			IsFemale:     strings.ToLower(isFemale) == "true",
+			One:          forOne,
+			TwoThreeFour: forTwo,
+			Others:       forFive,
+		}
+	}
+
+	valZero, err := GetValueByKey(lang, "0")
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	valMinus, err := GetValueByKey(lang, "-")
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	valOneFemale, err := GetValueByKey(lang, "1female")
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	valTwoFemale, err := GetValueByKey(lang, "2female")
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	ZeroRepresent = valZero
+	MinusRepresent = valMinus
+	OneInFemale = valOneFemale
+	TwoInFemale = valTwoFemale
 }
 
 func hundredsToNumber(hundreds int) []string {
@@ -124,15 +155,20 @@ func powThousandSuffix(twoLastDigits int, tenToPow ThousandToPows) string {
 func correctGender(lastDigit *string, thousandToPow ThousandToPows) {
 	if thousandToPow.IsFemale {
 		switch {
-		case *lastDigit == "один":
-			*lastDigit = "одна"
-		case *lastDigit == "два":
-			*lastDigit = "две"
+		case *lastDigit == OneToTwenty[1]:
+			*lastDigit = OneInFemale
+		case *lastDigit == OneToTwenty[2]:
+			*lastDigit = TwoInFemale
 		}
 	}
 }
 
-func GetStringRepresentation(number string) (string, error) {
+func GetStringRepresentation(number, lang string) (string, error) {
+
+	if CurrentLang != lang {
+		initStructuresForLanguage(lang)
+		CurrentLang = lang
+	}
 
 	regex, err := regexp.Compile("-?[0-9]+")
 	if err != nil {
@@ -147,7 +183,7 @@ func GetStringRepresentation(number string) (string, error) {
 	if err == nil {
 		matching = regex.FindString(number)
 		if matching == number {
-			return zeroRepresent, nil
+			return ZeroRepresent, nil
 		}
 	}
 
@@ -188,7 +224,7 @@ func GetStringRepresentation(number string) (string, error) {
 
 	result := strings.Join(fullRepresent, delim)
 	if isNegative {
-		result = minusRepresent + delim + result
+		result = MinusRepresent + delim + result
 	}
 
 	return strings.TrimSuffix(result, delim), nil
