@@ -9,12 +9,13 @@ import (
 func main() {
 
 	translNumber, err := dataInput()
-	if err == nil {
-		translString := GetStringRepresentation(translNumber)
-		fmt.Println("Result:", translString)
-	} else {
+	if err != nil {
 		fmt.Printf("Int parsing error \n %s \n", err)
+		return
 	}
+	translString := GetStringRepresentation(translNumber)
+	fmt.Println("Result:", translString)
+
 }
 
 func dataInput() (int64, error) {
