@@ -7,8 +7,8 @@ import (
 )
 
 type TestFibo struct {
-	begin, end int64
-	result     []int64
+	begin, end uint64
+	result     []uint64
 }
 
 func Test_dataInput(t *testing.T) {
@@ -32,9 +32,8 @@ func Test_dataInput(t *testing.T) {
 
 func Test_getUnderlyingSequence(t *testing.T) {
 	testcases := []TestFibo{
-		{0, 0, []int64{0}},
-		{1, 7, []int64{1, 1, 2, 3, 5}},
-		{0, 1, []int64{0, 1, 1}},
+		{0, 0, []uint64{0}},
+		{1, 7, []uint64{1, 1, 2, 3, 5}},
 	}
 
 	for _, test := range testcases {
@@ -55,20 +54,4 @@ func Test_main(t *testing.T) {
 
 	os.Args[1], os.Args[2] = "-b=-100", "-e=1"
 	main()
-
-}
-
-func Test_fibonacciOverflow(t *testing.T) {
-	fibo := fibonacci()
-	stepsCount := 0
-	for {
-		res, err := fibo()
-		stepsCount++
-		if res < 0 || err != nil || stepsCount == MaxInt64 {
-			break
-		}
-	}
-	if stepsCount == MaxInt64 {
-		t.Errorf("Overflow didn't happen")
-	}
 }

@@ -79,7 +79,7 @@ func hundredsToNumber(hundreds int) []string {
 
 	ones := hundreds % 10
 	tens := (hundreds - ones) % 100
-	hunds := (hundreds - tens - ones)
+	hunds := hundreds - tens - ones
 
 	if hunds > 0 {
 		result = append(result, Hundreds[hunds])

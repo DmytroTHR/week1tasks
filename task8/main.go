@@ -1,20 +1,19 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
+	"math"
 )
 
 const (
 	delimiter    = ", "
-	MaxInt64     = 1<<63 - 1
 	instructions = `You should specify both begin & end of Fibonacci sequence (both >= 0, end > begin) by passing them to function call
 		task8 -b=1 -e=20	//will print 'Result is: 1, 1, 2, 3, 5, 8, 13'`
 )
 
 var (
-	begin, end int64
+	begin, end uint64
 )
 
 func main() {
@@ -32,40 +31,37 @@ func main() {
 	fmt.Println()
 }
 
-func getUnderlyingSequence() []int64 {
+func getUnderlyingSequence() []uint64 {
 	fibo := fibonacci()
-	curFibo, err := fibo()
-	resSequence := make([]int64, 0, 10)
+	curFibo := fibo()
+	resSequence := make([]uint64, 0, 10)
 	for {
-		if curFibo >= begin && curFibo <= end {
-			resSequence = append(resSequence, curFibo)
-		} else if curFibo > end || err != nil {
+		if curFibo > end {
 			break
 		}
-		curFibo, err = fibo()
+		if curFibo >= begin && curFibo <= end {
+			resSequence = append(resSequence, curFibo)
+		}
+		curFibo = fibo()
 	}
 	return resSequence
 }
 
-func fibonacci() func() (int64, error) {
-	var curr, next int64 = 1, 0
-	return func() (int64, error) {
-		if MaxInt64-curr < curr {
-			return next, errors.New("overflow error")
-		}
+func fibonacci() func() uint64 {
+	var curr, next uint64 = 1, 0
+	return func() uint64 {
 		curr, next = next, curr+next
-
-		return curr, nil
+		return curr
 	}
 }
 
 func init() {
-	flag.Int64Var(&begin, "b", 0, "Sequence begin")
-	flag.Int64Var(&end, "e", 0, "Sequence end")
+	flag.Uint64Var(&begin, "b", 0, "Sequence begin")
+	flag.Uint64Var(&end, "e", 0, "Sequence end")
 }
 
 func dataInput() bool {
 	flag.Parse()
-	successfulInput := (begin >= 0 && end >= 0 && begin < end)
+	successfulInput := (begin >= 0 && end >= 0 && begin < end) || (end > math.MaxUint64)
 	return successfulInput
 }
